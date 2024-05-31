@@ -1,0 +1,36 @@
+.c-statistic-bar {
+  display: flex;
+  align-items: center;
+  background-color: getCssVar('background-color', 'overlay');
+
+  .c-statistic-bar-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $content-padding-large $content-padding;
+    position: relative;
+
+    &:not(:last-child) {
+      &:after {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        content: "";
+        height: 50%;
+        border-left: $border-width-large solid $split-color;
+      }
+    }
+
+    .c-statistic-bar-item-label {
+      margin-bottom: $component-span;
+    }
+
+    .c-statistic-bar-item-value {
+      font-weight: bold;
+      font-size: $font-size-huge;
+    }
+  }
+}

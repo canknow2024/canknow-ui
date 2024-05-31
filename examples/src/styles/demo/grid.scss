@@ -1,0 +1,15 @@
+.example {
+  .source {
+    .row {
+      margin-bottom: $component-span;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .grid-content {
+      min-height: $component-size;
+    }
+  }
+}

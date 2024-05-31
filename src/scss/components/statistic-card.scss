@@ -1,0 +1,40 @@
+.c-statistic-card {
+  margin-bottom: $component-span;
+  display: flex;
+  flex-direction: column;
+  background-size: 100% 100%;
+  flex: 1;
+  border-radius: $border-radius;
+
+  &-content {
+    flex: 1;
+    padding: $content-padding $content-padding-large;
+  }
+
+  &-label {
+    font-size: $font-size;
+    line-height: 1;
+    margin-bottom: $component-span;
+    color: getCssVar('color-sub');
+  }
+
+  &-value {
+    font-size: $component-size;
+    color: $text-color-title;
+  }
+
+  .c-statistic-card-extra {
+    height: $component-size;
+    padding: 0 $content-padding-large $content-padding $content-padding-large;
+  }
+
+  .c-statistic-card-footer {
+    border-top: $border-width solid $split-color;
+    height: $component-size;
+    display: flex;
+    align-items: center;
+    font-size: $font-size-small;
+    padding: 0 $content-padding-large;
+    color: getCssVar('color-sub');
+  }
+}

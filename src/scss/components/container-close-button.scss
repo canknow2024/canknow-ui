@@ -1,0 +1,25 @@
+.c-container-close-button {
+  border: 0;
+  background: transparent;
+  color: getCssVar('color-sub');
+  z-index: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.vertical-center {
+    position: absolute;
+    top: 50%;
+    right: $content-padding;
+    transform: translateY(-50%);
+  }
+
+  &-icon {
+    font-size: $font-size-mini;
+  }
+
+  &:hover {
+    color: $text-color-regular;
+  }
+}

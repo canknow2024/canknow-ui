@@ -1,0 +1,154 @@
+.c-message-box {
+  display: inline-block;
+  width: 420px;
+  border-radius: $border-radius;
+  overflow: hidden;
+  text-align: left;
+  vertical-align: middle;
+  background-color: $background-color-overlay;
+  backface-visibility: hidden;
+  box-shadow: getCssVar('box-shadow', 'light');
+
+  &-wrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+
+    &::after {
+      display: inline-block;
+      width: 0;
+      height: 100%;
+      vertical-align: middle;
+      content: "";
+    }
+  }
+
+  &-header {
+    position: relative;
+    padding: 0 $content-padding;
+
+    &-container {
+      height: $component-size-large;
+      border-bottom: $border-width solid $split-color;
+
+      @include flex-horizontal-align-center;
+    }
+  }
+
+  &-title {
+    font-weight: bold;
+    font-size: $font-size-large;
+    text-align: center;
+    color: $text-color-title;
+    user-select: none;
+
+    @include flex-adapter;
+  }
+
+  &-content {
+    position: relative;
+    padding: $content-padding;
+    color: $content-padding;
+  }
+}
+
+.c-message-box-input input.invalid,
+.c-message-box-input input.invalid:focus {
+  border-color: $color-error;
+}
+
+.c-message-box-status {
+  position: absolute;
+  top: 50%;
+  font-size: $font-size-huge !important;
+  transform: translateY(-50%);
+
+  &::before {
+    padding-left: 1px;
+  }
+
+  & + .c-message-box-message {
+    padding-right: 12px;
+    padding-left: 36px;
+  }
+
+  &.icon-success {
+    color: $color-success;
+  }
+
+  &.icon-info {
+    color: $color-info;
+  }
+
+  &.icon-warning {
+    color: $color-warning;
+  }
+
+  &.icon-error {
+    color: $color-error;
+  }
+}
+
+.c-message-box-message {
+  margin: 0;
+
+  p {
+    margin: 0;
+  }
+}
+
+.c-message-box-error-message {
+  font-size: $font-size-small;
+  color: $color-error;
+}
+
+.c-message-box-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: $content-padding;
+  text-align: right;
+
+  button:nth-child(2) {
+    margin-left: $component-span;
+  }
+
+  &-reverse {
+    flex-direction: row-reverse;
+  }
+}
+
+.c-message-box-fade-enter-active {
+  animation: message-box-fade-in $transition-time;
+}
+
+.c-message-box-fade-leave-active {
+  animation: message-box-fade-out $transition-time;
+}
+
+@keyframes message-box-fade-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -20px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateZ(0);
+  }
+}
+
+@keyframes message-box-fade-out {
+  0% {
+    opacity: 1;
+    transform: translateZ(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, -20px, 0);
+  }
+}

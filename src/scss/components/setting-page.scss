@@ -1,0 +1,16 @@
+.setting-page {
+  position: fixed;
+  z-index: $z-index-fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background-color: #fff;
+
+  &.show {
+    transform: translateX(0);
+  }
+
+  box-shadow: getCssVar('box-shadow', 'light');
+  transform: translateX(100%);
+  transition: $transition-time;
+}

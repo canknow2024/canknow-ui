@@ -1,0 +1,237 @@
+@use 'sass:math';
+@use 'sass:map';
+
+$button: () !default;
+$button: map.merge(
+                (
+                        'font-weight': getCssVar('font-weight-primary'),
+                        'border-color': getCssVar('border-color'),
+                        'background-color': getCssVar('fill-color', 'blank'),
+                        'text-color': getCssVar('text-color', 'regular'),
+                        'disabled-text-color': getCssVar('disabled-text-color'),
+                        'disabled-background-color': getCssVar('fill-color', 'blank'),
+                        'disabled-border-color': getCssVar('border-color-light'),
+                        'divide-border-color': rgba($color-white, 0.5),
+                        'hover-text-color': getCssVar('color-primary'),
+                        'hover-background-color': getCssVar('color-primary', 'light-9'),
+                        'hover-border-color': getCssVar('color-primary-light-7'),
+                        'active-text-color': getCssVar('button-hover-text-color'),
+                        'active-border-color': getCssVar('color-primary'),
+                        'active-background-color': getCssVar('button', 'hover-background-color'),
+                        'outline-color': getCssVar('color-primary', 'light-5'),
+                        'hover-link-text-color': getCssVar('color-info'),
+                        'active-color': getCssVar('text-color', 'primary'),
+                ),
+                $button
+);
+
+@include b(button) {
+  @include set-component-css-var('button', $button);
+}
+
+.c-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  background-image: none;
+  transition: $transition-time;
+  cursor: pointer;
+  vertical-align: middle;
+  -webkit-appearance: none;
+  padding: 0 $content-padding;
+  font-size: $font-size-small;
+  text-align: center;
+  background-color: getCssVar('button', 'background-color');
+  border: $border-width solid;
+  border-color: getCssVar('button', 'border-color');
+  color: getCssVar('button', 'text-color');
+  @include text-ellipsis;
+  border-radius: getCssVar('border-radius', 'base');
+
+  &:hover {
+    color: getCssVar('button', 'hover', 'text-color');
+    border-color: getCssVar('button', 'hover', 'border-color');
+    background-color: getCssVar('button', 'hover', 'background-color');
+    outline: none;
+  }
+
+  &:active {
+    color: getCssVar('button', 'active', 'text-color');
+    border-color: getCssVar('button', 'active', 'border-color');
+    background-color: getCssVar('button', 'active', 'background-color');
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid getCssVar('button', 'outline-color');
+    outline-offset: 1px;
+    transition: outline-offset 0s, outline 0s;
+  }
+
+  & + & {
+    margin-left: $component-span;
+  }
+
+  &.small + & {
+    margin-left: $text-span;
+  }
+
+  &::-moz-focus-inner {
+    border: 0;
+  }
+
+  @include when(active) {
+    color: getCssVar('button', 'active', 'text-color');
+    border-color: getCssVar('button', 'active', 'border-color');
+    background-color: getCssVar('button', 'active', 'background-color');
+    outline: none;
+  }
+
+  @include m(dashed) {
+    border-style: dashed;
+  }
+
+  @include when(disabled) {
+    &,
+    &:hover {
+      color: getCssVar('button', 'disabled', 'text-color');
+      cursor: not-allowed;
+      background-image: none;
+      background-color: getCssVar('button', 'disabled', 'background-color');
+      border-color: getCssVar('button', 'disabled', 'border-color');
+    }
+  }
+
+  @include m(shorter) {
+    padding: 0 $content-padding-mini;
+  }
+
+  @include m(short) {
+    padding: 0 $content-padding-small;
+  }
+
+  @include m(long) {
+    padding: 0 $content-padding-middle;
+  }
+
+  @include m(longer) {
+    padding: 0 $content-padding-large;
+  }
+
+
+  @include when(loading) {
+    position: relative;
+    pointer-events: none;
+    border-color: getCssVar('button', 'disabled', 'border-color');
+
+    &:before {
+      z-index: 1;
+      pointer-events: none;
+      content: '';
+      position: absolute;
+      left: -1px;
+      top: -1px;
+      right: -1px;
+      bottom: -1px;
+      border-radius: inherit;
+      background-color: getCssVar('mask-color', 'extra-light');
+    }
+  }
+
+  @include m(bold) {
+    font-weight: bold;
+  }
+
+  @include m(block) {
+    display: flex;
+    width: 100%;
+  }
+
+  @include m(plain) {
+    @include css-var-from-global(
+                            ('button', 'hover', 'text-color'),
+                            ('color', 'primary')
+    );
+    @include css-var-from-global(
+                            ('button', 'hover', 'bg-color'),
+                            ('fill-color', 'blank')
+    );
+    @include css-var-from-global(
+                            ('button', 'hover', 'border-color'),
+                            ('color', 'primary')
+    );
+  }
+
+  @include m(ghost) {
+    @include css-var-from-global(
+                            ('button', 'text-color'),
+                            ('color', 'regular')
+    );
+    @include css-var-from-global(
+                            ('button', 'background-color'),
+                            ('fill-color', 'blank')
+    );
+    @include css-var-from-global(
+                            ('button', 'border-color'),
+                            ('border-color', 'transparent')
+    );
+  }
+
+  @include m(bordered) {
+    @include css-var-from-global(
+                            ('button', 'text-color'),
+                            ('regular-text-color')
+    );
+    @include css-var-from-global(
+                            ('button', 'background-color'),
+                            ('fill-color', 'transparent')
+    );
+  }
+
+  @include e(label) {
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .icon + label {
+    margin-left: $icon-text-span;
+  }
+
+  label + .icon {
+    margin-right: 0;
+    margin-left: $icon-text-span;
+  }
+
+  @each $type in (primary, success, warning, danger, info) {
+    @include m($type) {
+      @include button-variant($type);
+    }
+  }
+
+  @each $sizeName, $size in $sizes {
+    @include when($sizeName) {
+      height: map-get($size, 'size');
+      padding: 0 map-get($size, 'padding');
+      font-size: map-get($size, 'fontSize');
+
+      @include when(round) {
+        border-radius: getCssVar('border-radius', 'round');
+      }
+
+      @include when(circle) {
+        &.c-button-text {
+          border-radius: map-get($size, 'size');
+        }
+
+        &.c-button-icon {
+          padding: 0;
+          width: map-get($size, 'size');
+          border-radius: map-get($size, 'size');
+        }
+      }
+    }
+  }
+}

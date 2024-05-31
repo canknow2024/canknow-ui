@@ -1,0 +1,66 @@
+@use "~canknow-ui-core/src/scss/mixins/function" as *;
+
+// Slider
+$slider-color: $color-primary !default;
+$slider-button-size: $font-size-large !default;
+$slider-height: 3px !default;
+
+/* Popover
+------------- */
+$popover-background-color: $background-color-overlay !default;
+$popover-font-size: $font-size !default;
+$popover-border-color: $border-color !default;
+$popover-arrow-size: 6px !default;
+$popover-padding: $content-padding !default;
+$popover-padding-large: $content-padding-large !default;
+$popover-title-font-size: $font-size !default;
+
+/* Tooltip
+------------- */
+$tooltip-fill: $color-primary !default;
+$tooltip-color: #fff !default;
+$tooltip-font-size: $font-size-small !default;
+$tooltip-border-color: $color-primary !default;
+$tooltip-arrow-size: 6px !default;
+$tooltip-padding: $content-padding !default;
+
+/* DatePicker
+------------- */
+$datepicker-font-color: $text-color-regular !default;
+$datepicker-off-font-color: $text-color-disabled !default;
+$datepicker-header-font-color: getCssVar('color-sub') !default;
+$datepicker-icon-color: $text-color-regular !default;
+$datepicker-border-color: $border-color !default;
+$datepicker-inner-border-color: $split-color !default;
+$datepicker-in-range-background-color: $background-color-component !default;
+$datepicker-in-range-hover-background-color: $background-color-component-highlight !default;
+$datepicker-active-color: $color-primary !default;
+$datepicker-hover-font-color: $color-primary !default;
+$datepicker-cell-hover-color: #fff !default;
+
+/* Scrollbar
+------------- */
+$scrollbar-background-color: $background-color-component !default;
+$scrollbar-hover-background-color: $color-primary !default;
+
+/* Popover
+------------- */
+$popover-background-color: #fff !default;
+$popover-font-size: $font-size !default;
+$popover-border-color: $border-color !default;
+$popover-arrow-size: 6px !default;
+$popover-padding: $content-padding !default;
+$popover-padding-large: $content-padding-large !default;
+$popover-title-font-size: $font-size-large !default;
+$popover-title-font-color: $text-color-regular !default;
+
+$svg-monochrome-grey: #DCDDE0 !default;
+
+$table-background: getCssVar('background-color-overlay') !default;
+$th-head-text-color: getCssVar('color-sub') !default;
+$th-head-background-color: getCssVar('background-color-overlay') !default;
+$tr-background-color: getCssVar('background-color-overlay') !default;
+
+$portlet-title-text-color: $text-color-title !default;
+
+$select-selected-text-color: $color-primary;

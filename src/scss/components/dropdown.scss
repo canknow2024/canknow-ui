@@ -1,0 +1,41 @@
+@include b(dropdown) {
+  position: relative;
+  display: inline-flex;
+  overflow: hidden;
+  font-size: $font-size;
+  color: $text-color-regular;
+
+  .c-dropdown-handle {
+    display: flex;
+  }
+
+  .c-button-group {
+    display: inline-flex;
+    flex: 1;
+    overflow: hidden;
+
+    .c-button {
+      float: none;
+    }
+  }
+
+  .c-dropdown-caret-button {
+    position: relative;
+    padding-right: $text-padding;
+    padding-left: $text-padding;
+    color: $text-color-placeholder;
+    flex-shrink: 0;
+  }
+
+  .c-dropdown-self-define {
+    &:focus:active,
+    &:focus:not(.focusing) {
+      outline-width: 0;
+    }
+  }
+
+  @include e(icon) {
+    margin: 0 3px;
+    font-size: $font-size-small;
+  }
+}

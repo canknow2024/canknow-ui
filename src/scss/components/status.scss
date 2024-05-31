@@ -1,0 +1,51 @@
+.c-status {
+  line-height: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+
+  &::before {
+    display: inline-block;
+    content: '';
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    border-radius: 100%;
+  }
+
+  &.c-status-success::before {
+    background: $color-success;
+  }
+
+  &.c-status-error::before {
+    background: $color-danger;
+  }
+
+  &.c-status-warning::before {
+    background: $color-warning;
+  }
+
+  &.c-status-waiting::before {
+    background: $color-waiting;
+  }
+
+  &.c-status-running::before {
+    background: $color-info;
+  }
+
+  &.c-status-invalid::before {
+    background: $split-color;
+  }
+
+  &.c-status-default::before {
+    background: $color-initial;
+  }
+
+  &.c-status-skipped::before {
+
+  }
+
+  &.c-status-canceled::before {
+    background: $text-color-regular;
+  }
+}

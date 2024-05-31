@@ -1,0 +1,6 @@
+$scrollbar-thumb-background: var(--c-scroll-bar-thumb-background, rgb(247, 247, 247)) !default;
+$scrollbar-track-background: var(--c-scrollbar-track-background, #fff) !default;
+$scrollbar-size: $space !default;
+
+$page-header-height: $component-size-largest !default;
+$collapse-sidebar-width: ($component-span + $font-size-large) * 2 + $font-size-large  !default;

@@ -1,0 +1,93 @@
+@use 'sass:math';
+@use 'sass:map';
+
+$message: () !default;
+$message: map.merge(
+                (
+                        'background-color': getCssVar('color', 'info', 'light-9'),
+                        'border-color': getCssVar('border-color-lighter'),
+                        'close-icon-color': getCssVar('text-color-placeholder'),
+                        'close-hover-color': getCssVar('text-color-secondary'),
+                ),
+                $message
+);
+
+
+.message-fade-enter,
+.message-fade-leave-active {
+  opacity: 0;
+  transform: translate(-50%, -100%);
+}
+
+@include b(message) {
+  @include set-component-css-var('message', $message);
+
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  overflow: hidden;
+  background-color: getCssVar('message', 'background-color');
+  transform: translateX(-50%);
+  transition: opacity .3s, transform .4s, top .4s;
+  width: fit-content;
+  border-radius: getCssVar('border-radius-base');
+  border: $border-width solid;
+  border-color: getCssVar('message', 'border-color');
+
+  @include e(close-button) {
+    margin-right: $content-padding;
+  }
+
+  @include e(body) {
+    display: inline-flex;
+    align-items: center;
+    padding: $text-padding $content-padding;
+  }
+
+  @include e(icon) {
+    display: block;
+    margin-right: $component-span;
+    border-radius: 100%;
+    font-size: $component-size;
+    text-align: center;
+    color: $text-color-regular;
+  }
+
+  @include e(content) {
+    text-align: center;
+    overflow-wrap: break-word;
+    color: $text-color-regular;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    @include user-select-none;
+  }
+
+  @each $type in (success, info, warning, error) {
+    @include m($type) {
+      @include css-var-from-global(
+                              ('message', 'background-color'),
+                              ('color', $type, 'light-9')
+      );
+      @include css-var-from-global(
+                              ('message', 'border-color'),
+                              ('color', $type, 'light-8')
+      );
+      @include css-var-from-global(('message', 'text-color'), ('color', $type));
+
+      .#{$namespace}-message-body-content {
+        color: getCssVar('message', 'text-color');
+        overflow-wrap: break-word;
+      }
+
+      & .#{$namespace}-message-icon {
+        color: getCssVar('message', 'text-color');
+      }
+    }
+  }
+}

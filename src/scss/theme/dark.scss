@@ -1,0 +1,195 @@
+@use 'sass:map';
+@use 'sass:math';
+@use "~canknow-ui-core/src/scss/function/color" as *;
+
+$dark-colors: () !default;
+
+@each $type in $types {
+  $dark-colors: map.deep-merge(
+                  (
+                          $type: (
+                                  'base': map.get($colors, $type, 'base'),
+                          ),
+                  ),
+                  $dark-colors
+  ) !global;
+}
+
+@mixin set-dark-color-mix-level(
+  $type,
+  $number,
+  $mode: 'light',
+  $mix-color: $color-white
+) {
+  // hex mix color
+  $dark-colors: map.deep-merge(
+                  (
+                          $type: (
+                                  '#{$mode}-#{$number}':
+                                  mix($mix-color, map.get($dark-colors, $type, 'base'), math.percentage($number / 10)),
+                          ),
+                  ),
+                  $dark-colors
+  ) !global;
+}
+
+$dark-background-colors: () !default;
+$dark-background-colors: map.merge(
+                (
+                        'page': #0a0a0a,
+                        '': #141414,
+                        'overlay': #1d1e1f,
+                        'overlay-hover': #3d3f42,
+                ),
+                $dark-background-colors
+);
+
+
+@each $type in $types {
+  @for $i from 1 through 9 {
+    @include set-dark-color-mix-level($type, $i, 'light', map.get($dark-background-colors, ''));
+  }
+}
+@each $type in $types {
+  @include set-dark-color-mix-level($type, 2, 'dark', $color-white);
+}
+
+$dark-fill-color-base: #fafcff;
+$dark-fill-colors: () !default;
+$dark-fill-colors: map.merge(
+                (
+                        'darker': rgba($dark-fill-color-base, 0.2),
+                        'dark': rgba($dark-fill-color-base, 0.16),
+                        '': rgba($dark-fill-color-base, 0.12),
+                        'light': rgba($dark-fill-color-base, 0.08),
+                        'lighter': rgba($dark-fill-color-base, 0.04),
+                        'extra-light': rgba($dark-fill-color-base, 0.02),
+                        'blank': transparent,
+                ),
+                $dark-fill-colors
+);
+
+$dark-border-color-base: #f5f8ff;
+$dark-border-colors: () !default;
+$dark-border-colors: map.merge(
+                (
+                        'darker': rgba($dark-border-color-base, 0.35),
+                        'dark': rgba($dark-border-color-base, 0.3),
+                        '': rgba($dark-border-color-base, 0.25),
+                        'light': rgba($dark-border-color-base, 0.2),
+                        'lighter': rgba($dark-border-color-base, 0.15),
+                        'extra-light': rgba($dark-border-color-base, 0.1),
+                ),
+                $dark-border-colors
+);
+
+$dark-box-shadows: () !default;
+$dark-box-shadows: map.merge(
+                (
+                        '': (
+                                0px 12px 32px 4px rgba(0, 0, 0, 0.36),
+                                0px 8px 20px rgba(0, 0, 0, 0.72),
+                        ),
+                        'light': (
+                                0px 0px 12px rgba(0, 0, 0, 0.72),
+                        ),
+                        'lighter': (
+                                0px 0px 6px rgba(0, 0, 0, 0.72),
+                        ),
+                        'dark': (
+                                0px 16px 48px 16px rgba(0, 0, 0, 0.72),
+                                0px 12px 32px #000000,
+                                0px 8px 16px -8px #000000,
+                        ),
+                ),
+                $dark-box-shadows
+);
+
+$dark-text-color-base: #f0f5ff;
+$dark-text-colors: () !default;
+$dark-text-colors: map.merge(
+                (
+                        'primary': rgba($dark-text-color-base, 0.95),
+                        'title': rgba($dark-text-color-base, 0.95),
+                        'regular': rgba($dark-text-color-base, 0.85),
+                        'secondary': rgba($dark-text-color-base, 0.65),
+                        'placeholder': rgba($dark-text-color-base, 0.55),
+                        'disabled': rgba($dark-text-color-base, 0.4),
+                ),
+                $dark-text-colors
+);
+
+@each $key, $val in $dark-text-colors {
+  $dark-text-colors: map.merge(
+                  $dark-text-colors,
+                  (
+                          $key: mix-overlay-color($val, map.get($dark-background-colors, '')),
+                  )
+  ) !global;
+}
+
+$dark-mask-colors: () !default;
+$dark-mask-colors: map.merge(
+                (
+                        '': rgba(0, 0, 0, 0.8),
+                        'extra-light': rgba(0, 0, 0, 0.3),
+                ),
+                $dark-mask-colors
+);
+
+$dark-page-headers: () !default;
+$dark-page-headers: map.merge(
+                (
+                        'active-color': getCssVar('color-primary'),
+                        'text-color': getCssVar('text-color-primary'),
+                        'hover-text-color': getCssVar('color-primary'),
+                        'background-color': getCssVar('background-color-overlay'),
+                        'hover-background-color': getCssVar('color-primary-light-9'),
+                        'border-color': getCssVar('border-color-lighter')
+                ),
+                $dark-page-headers
+);
+
+$menus: () !default;
+$menus: map.merge(
+                (
+                        'active-text-color': getCssVar('color-primary'),
+                        'text-color': getCssVar('text-color-primary'),
+                        'hover-text-color': getCssVar('color-primary'),
+                        'icon-color': getCssVar('text-color-placeholder'),
+                        'toggle-icon-color': getCssVar('text-color-placeholder'),
+                        'background-color': getCssVar('background-color-overlay'),
+                        'hover-background-color': getCssVar('fill-color-lighter'),
+                        'active-background-color': getCssVar('fill-color-light'),
+                        'border-color': getCssVar('border-color'),
+                        'active-border-color': getCssVar('color-primary'),
+                ),
+                $menus
+);
+
+html.dark {
+  color-scheme: dark;
+
+  // hex colors
+  @each $type in (primary, success, warning, danger, error, info) {
+    @include set-css-color-type($dark-colors, $type);
+  }
+
+  // --el-box-shadow-#{$type}
+  @include set-component-css-var('box-shadow', $dark-box-shadows);
+
+  // color-scheme
+  // Background --el-bg-color-#{$type}
+  @include set-component-css-var('background-color', $dark-background-colors);
+  // --el-text-color-#{$type}
+  @include set-component-css-var('text-color', $dark-text-colors);
+  // --el-border-color-#{$type}
+  @include set-component-css-var('border-color', $dark-border-colors);
+  // Fill --el-fill-color-#{$type}
+  @include set-component-css-var('fill-color', $dark-fill-colors);
+  @include set-component-css-var('mask-color', $dark-mask-colors);
+
+  @include set-component-css-var('page-header', $dark-page-headers);
+
+  @include set-component-css-var('menu', $menus);
+}

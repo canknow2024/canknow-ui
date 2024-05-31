@@ -1,0 +1,113 @@
+@include b(input-number) {
+  position: relative;
+  display: inline-flex;
+  width: 180px;
+  vertical-align: middle;
+
+  .c-input {
+    display: block;
+
+    &-input {
+      -webkit-appearance: none;
+      text-align: center;
+      padding-left: $content-padding;
+      padding-right: $content-padding;
+      border-radius: 0 !important;
+    }
+  }
+
+  @include e((increase, decrease)) {
+    z-index: 1;
+    top: 1px;
+    width: $component-size;
+    height: $component-size;
+    text-align: center;
+    background: $background-color-component;
+    color: $text-color-regular;
+    cursor: pointer;
+    font-size: $font-size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: $border-width solid $border-color;
+    flex-shrink: 0;
+    user-select: none;
+
+    &:hover {
+      color: $color-primary;
+
+      &:not(.disabled) ~ .c-input .c-input-inner:not(.disabled) {
+
+      }
+    }
+
+    &.disabled {
+      color: $text-color-disabled;
+      cursor: not-allowed;
+    }
+  }
+
+  @include e(increase) {
+    right: 1px;
+    border-radius: 0 $border-radius $border-radius 0;
+    border-left: none;
+  }
+
+  @include e(decrease) {
+    left: 1px;
+    border-radius: $border-radius 0 0 $border-radius;
+    border-right: none;
+  }
+
+  @include when(disabled) {
+    @include e((increase, decrease)) {
+      border-color: $border-color-disabled;
+      color: $text-color-disabled;
+
+      &:hover {
+        color: $border-color-disabled;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  @include m(medium) {
+    width: 200px;
+
+    @include e((increase, decrease)) {
+    }
+
+    .c-input-inner {
+    }
+  }
+
+  @include m(small) {
+    width: 130px;
+
+    @include e((increase, decrease)) {
+      width: $component-size-small;
+      height: $component-size-small;
+
+      [class*=c-icon] {
+        transform: scale(.9);
+      }
+    }
+
+    .c-input-inner {
+
+    }
+  }
+
+  @include m(large) {
+    width: 240px;
+
+    @include e((increase, decrease)) {
+      width: $component-size-large;
+      height: $component-size-large;
+    }
+
+    .c-input-inner {
+
+    }
+  }
+}

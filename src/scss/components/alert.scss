@@ -1,0 +1,28 @@
+.c-alert {
+  position: relative;
+  padding: $text-padding $content-padding;
+  margin-bottom: $component-span;
+  border: solid transparent;
+  font-size: $font-size-small;
+  color: $text-color-title;
+  background-color: getCssVar('color', 'white');
+  border-radius: getCssVar('border-radius-base');
+
+  .c-alert-close-button {
+    position: absolute;
+    top: 50%;
+    right: $content-padding;
+    transform: translateY(-50%);
+  }
+
+  @each $type in (success, info, warning, danger, error) {
+    @include when($type) {
+      @include css-var-from-global(
+                              ('alert', 'background-color'),
+                              ('color', $type, 'light-9')
+      );
+      background-color: getCssVar('alert', 'background-color');
+      color: getCssVar('color', $type);
+    }
+  }
+}

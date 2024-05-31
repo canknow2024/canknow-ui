@@ -1,0 +1,95 @@
+@use 'sass:map';
+@use 'sass:math';
+
+$page-headers: () !default;
+$page-headers: map.merge(
+                (
+                        'active-color': getCssVar('color-primary'),
+                        'text-color': getCssVar('text-color-primary'),
+                        'hover-text-color': getCssVar('color-primary'),
+                        'background-color': getCssVar('background-color-overlay'),
+                        'hover-background-color': getCssVar('color-primary-light-9'),
+                        'item-hover-fill': getCssVar('color-primary-light-9'),
+                        'border-color': getCssVar('border-color-lighter')
+                ),
+                $page-headers
+);
+
+:root {
+  // They are defined on :root so they can be inherited by sub-menu instead of overwritten
+  @include set-component-css-var('page-header', $page-headers);
+}
+
+.c-page-header {
+  position: relative;
+  border-bottom: $border-width solid getCssVar('page-header-border-color');
+  background-image: radial-gradient(transparent $border-width, getCssVar('page-header-background-color') 1px);
+
+  &.shadow {
+    box-shadow: getCssVar('box-shadow', 'light');
+  }
+
+  &.fixed-top {
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    + .page-content {
+      padding-top: $page-header-height;
+    }
+  }
+
+  .banner {
+    overflow: hidden;
+  }
+
+  .c-page-header-wrapper {
+    height: $page-header-height;
+    padding: 0 $content-padding;
+
+    @include flex-horizontal-align-center;
+  }
+
+  .c-page-header-button-back {
+    display: block;
+    margin-right: $component-span;
+  }
+
+  .c-page-header-title-block {
+    flex-shrink: 0;
+    margin-right: $space2;
+    cursor: pointer;
+
+    .c-page-header-page-logo {
+      display: block;
+      height: $component-size;
+      margin-right: $component-span;
+    }
+
+    .c-page-header-page-title {
+      display: block;
+      font-weight: bold;
+      font-size: $font-size-largest;
+      cursor: pointer;
+
+      @include user-select-none;
+    }
+
+    @include flex-horizontal-align-center;
+  }
+
+  .c-page-header-right-wrap {
+    flex-shrink: 0;
+
+    @include flex-horizontal-align-center;
+  }
+
+
+  .navbar-toggle-button {
+    transition: $transition-time;
+
+    &.active {
+      transform: rotateZ(90deg);
+    }
+  }
+}
