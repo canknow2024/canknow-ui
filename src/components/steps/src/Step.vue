@@ -5,7 +5,7 @@
       :class="[
       !isSimple && `${$parent.direction}`,
       isSimple && 'is-simple',
-      isLast && !space && !isCenter && 'flex',
+      isLast && !space && !isCenter && 'is-flex',
       isCenter && !isVertical && !isSimple && 'center'
      ]">
     <!-- icon & line -->
