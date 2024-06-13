@@ -1,164 +1,313 @@
-.c-steps {
-  .c-step-item {
-    position: relative;
+@include b(steps) {
+  display: flex;
 
-    &:not(:last-child) {
-      @include flex-adapter;
-    }
-
-    &:not(:last-child)::before {
-      position: absolute;
-      display: block;
-      width: calc(100% - 1rem);
-      height: .1*$space;
-      margin-top: $component-span;
-      background: $background-color-component;
-      content: "";
-    }
-
-    .c-step-header {
-      position: relative;
-
-      .c-step-header-inner {
-        width: $component-size-small;
-        height: $component-size-small;
-        margin-right: $component-span;
-        border: $border-width solid rgba(0, 0, 0, 0.3);
-        border-radius: $component-size-small;
-        font-size: $font-size;
-        line-height: $component-size-small - $border-width * 2;
-        text-align: center;
-        transition: background-color $transition-time ease, border-color $transition-time ease;
-
-        .c-step-header-icon {
-        }
-
-        @include transition(background-color $transition-time ease,border-color $transition-time ease);
-      }
-    }
-
-    .c-step-main {
-      position: relative;
-
-      .c-step-title {
-        display: inline-block;
-        padding-right: $content-padding;
-        margin: 0 0 .5*$space 0;
-        font-weight: 700;
-        font-size: $font-size;
-        line-height: 26px;
-        color: rgba(0, 0, 0, .65);
-        background-color: #fff;
-      }
-
-      .c-step-content {
-        font-size: $font-size;
-        color: rgba(0, 0, 0, .65);
-      }
-    }
-
-    &.finish {
-      &::before {
-        background: $color-primary;
-      }
-
-      .c-step-header {
-        .c-step-header-inner {
-          border-color: $color-primary;
-          color: $color-primary;
-          background-color: #fff;
-
-          .c-step-header-icon {
-            color: $color-primary;
-          }
-        }
-      }
-
-      .c-step-main {
-        .c-step-title {
-          color: rgba(0, 0, 0, .43);
-        }
-
-        .c-step-description {
-          color: rgba(0, 0, 0, .43);
-        }
-      }
-    }
-
-    &.error {
-      .c-step-header {
-        .c-step-header-inner {
-          border: none;
-          border-color: $color-primary;
-          font-size: $component-size-small;
-          color: $color-error;
-
-          .step-header-icon {
-            color: #fff;
-          }
-        }
-      }
-
-      .c-step-main {
-        .c-step-title {
-          color: rgba(0, 0, 0, .65);
-        }
-
-        .c-step-description {
-          color: rgba(0, 0, 0, .65);
-        }
-      }
-    }
-
-    &.process {
-      .c-step-header {
-        .c-step-header-inner {
-          border-color: $color-primary;
-          color: #fff;
-          background-color: $color-primary;
-
-          .c-step-header-icon {
-            color: #fff;
-          }
-        }
-      }
-
-      .c-step-main {
-        .c-step-title {
-          color: rgba(0, 0, 0, .65);
-        }
-
-        .c-step-description {
-          color: rgba(0, 0, 0, .65);
-        }
-      }
-    }
-
-    &.wait {
-      .c-step-header {
-        .c-step-header-inner {
-          border-color: rgba(0, 0, 0, .25);
-          background-color: #fff;
-
-          .c-step-header-icon {
-            color: rgba(0, 0, 0, .25);
-          }
-        }
-      }
-
-      .c-step-main {
-        .c-step-title {
-          color: rgba(0, 0, 0, .43);
-        }
-
-        .c-step-description {
-          color: rgba(0, 0, 0, .43);
-        }
-      }
-    }
-
-    @include flex-horizontal;
+  @include m(is-simple) {
+    padding: 13px 8%;
+    border-radius: $border-radius-large;
+    background: $background-color-component;
   }
 
-  @include flex-horizontal-align-center;
+  @include m(horizontal) {
+    white-space: nowrap;
+  }
+
+  @include m(vertical) {
+    height: 100%;
+    flex-flow: column;
+  }
+}
+
+@include b(step) {
+  position: relative;
+  flex-shrink: 1;
+
+  @include pseudo(last-of-type) {
+    @include e(line) {
+      display: none;
+    }
+
+    // 只有未设置 space 的情况下才自适应宽度
+    @include when(flex) {
+      flex-basis: auto !important;
+      flex-shrink: 0;
+      flex-grow: 0;
+    }
+
+    @include e((main, description)) {
+      padding-right: 0;
+    }
+  }
+
+  @include e(head) {
+    position: relative;
+    width: 100%;
+
+    @include when(process) {
+      color: $text-color-primary;
+      border-color: $text-color-primary;
+    }
+
+    @include when(wait) {
+      color: $text-color-placeholder;
+      border-color: $text-color-placeholder;
+    }
+
+    @include when(success) {
+      color: $color-success;
+      border-color: $color-success;
+    }
+
+    @include when(error) {
+      color: $color-danger;
+      border-color: $color-danger;
+    }
+
+    @include when(finish) {
+      color: $color-primary;
+      border-color: $color-primary;
+    }
+  }
+
+  @include e(icon) {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: $component-size-small;
+    height: $component-size-small;
+    font-size: $font-size;
+    box-sizing: border-box;
+    background: $background-color-overlay;
+    transition: $transition-time ease-out;
+
+    @include when(is-text) {
+      border-radius: 50%;
+      border: 2px solid;
+      border-color: inherit;
+    }
+
+    @include when(is-icon) {
+      width: 40px;
+    }
+  }
+
+  @include e(icon-inner) {
+    display: inline-block;
+    user-select: none;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1;
+    color: inherit;
+
+    &.icon:not(.status) {
+      font-size: 25px;
+      font-weight: normal;
+    }
+
+    // 组件自身表示状态的图标
+    @include when(status) {
+      transform: translateY(1px);
+    }
+  }
+
+  @include e(line) {
+    position: absolute;
+    border-color: inherit;
+    background-color: $text-color-placeholder;
+  }
+
+  @include e(line-inner) {
+    display: block;
+    border-width: 1px;
+    border-style: solid;
+    border-color: inherit;
+    transition: .15s ease-out;
+    box-sizing: border-box;
+    width: 0;
+    height: 0;
+  }
+
+  @include e(main) {
+    white-space: normal;
+    text-align: left;
+  }
+
+  @include e(title) {
+    font-size: $font-size;
+    line-height: 2;
+
+    @include when(process) {
+      font-weight: bold;
+      color: $color-primary;
+    }
+
+    @include when(wait) {
+      color: $text-color-placeholder;
+    }
+
+    @include when(success) {
+      color: $color-success;
+    }
+
+    @include when(error) {
+      color: $color-danger;
+    }
+
+    @include when(finish) {
+      color: $color-primary;
+    }
+  }
+
+  @include e(description) {
+    padding-right: 10%;
+    font-size: $font-size-small;
+    line-height: 1.5;
+    font-weight: normal;
+    color: $text-color-content;
+  }
+
+  @include when(horizontal) {
+    display: inline-block;
+
+    @include e(line) {
+      height: 2px;
+      top: $component-size-small / 2;
+      transform: translateY(-50%);
+      left: 0;
+      right: 0;
+    }
+  }
+
+  @include when(vertical) {
+    display: flex;
+
+    @include e(head) {
+      flex-grow: 0;
+      width: 24px;
+    }
+
+    @include e(main) {
+      padding-left: 10px;
+      flex-grow: 1;
+    }
+
+    @include e(title) {
+      line-height: 24px;
+      padding-bottom: 8px;
+    }
+
+    @include e(line) {
+      width: 2px;
+      top: 0;
+      bottom: 0;
+      left: 11px;
+    }
+
+    @include e(icon) {
+      @include when(is-icon) {
+        width: 24px;
+      }
+    }
+  }
+
+  @include when(center) {
+    @include e(head) {
+      text-align: center;
+    }
+
+    @include e(main) {
+      text-align: center;
+    }
+
+    @include e(description) {
+      padding-left: 20%;
+      padding-right: 20%;
+    }
+
+    @include e(line) {
+      left: 50%;
+      right: -50%;
+    }
+  }
+
+  @include when(is-simple) {
+    display: flex;
+    align-items: center;
+
+    @include e(head) {
+      width: auto;
+      font-size: 0;
+      padding-right: $content-padding;
+    }
+
+    @include e(icon) {
+      background: transparent;
+      width: 16px;
+      height: 16px;
+      font-size: 12px;
+    }
+
+    @include e(icon-inner) {
+      &.icon:not(.status) {
+        font-size: 18px;
+      }
+
+      &.status {
+        transform: scale(.8) translateY(1px);
+      }
+    }
+
+    @include e(main) {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      flex-grow: 1;
+    }
+
+    @include e(title) {
+      font-size: $font-size;
+      line-height: 20px;
+    }
+
+    @include pseudo('not(:last-of-type)') {
+      @include e(title) {
+        max-width: 50%;
+        word-break: break-all;
+      }
+    }
+
+    @include e(arrow) {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &::before,
+      &::after {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        height: 15px;
+        width: 1px;
+        background: $text-color-placeholder;
+      }
+
+      &::before {
+        transform: rotate(-45deg) translateY(-4px);
+        transform-origin: 0 0;
+      }
+
+      &::after {
+        transform: rotate(45deg) translateY(4px);
+        transform-origin: 100% 100%;
+      }
+    }
+
+    @include pseudo(last-of-type) {
+      @include e(arrow) {
+        display: none;
+      }
+    }
+  }
 }

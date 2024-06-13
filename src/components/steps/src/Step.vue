@@ -1,103 +1,178 @@
 <template>
-  <div class="c-step-item" :class="wrapClasses" :style="styles">
-    <div class="c-step-tail"><i></i></div>
-    <div class="c-step-header">
-      <div class="c-step-header-inner">
-        <span v-if="!icon && currentStatus !== 'finish' && currentStatus !== 'error'">{{ stepNumber }}</span>
-        <icon v-else :name="iconName"></icon>
+  <div
+      class="c-step"
+      :style="style"
+      :class="[
+      !isSimple && `${$parent.direction}`,
+      isSimple && 'is-simple',
+      isLast && !space && !isCenter && 'flex',
+      isCenter && !isVertical && !isSimple && 'center'
+     ]">
+    <!-- icon & line -->
+    <div
+        class="c-step-head"
+        :class="`${currentStatus}`">
+      <div
+          class="c-step-line"
+          :style="isLast ? '' : { marginRight: $parent.stepOffset + 'px' }">
+        <i class="c-step-line-inner" :style="lineStyle"></i>
+      </div>
+
+      <div class="c-step-icon" :class="`${icon ? 'is-icon' : 'is-text'}`">
+        <slot v-if="currentStatus !== 'success' && currentStatus !== 'error'" name="icon">
+          <icon v-if="icon" class="c-step-icon-inner" :name="[icon]"></icon>
+          <div class="c-step-icon-inner" v-if="!icon && !isSimple">{{ index + 1 }}</div>
+        </slot>
+        <icon v-else :name="currentStatus === 'success' ? 'yes' : 'cross'" class="c-step-icon-inner status"></icon>
       </div>
     </div>
+    <!-- title & description -->
     <div class="c-step-main">
-      <slot name="title">
-        <div class="c-step-title" v-if="title">{{ title }}</div>
-      </slot>
-      <slot>
-        <div v-if="content" class="c-step-content">{{ content }}</div>
-      </slot>
+      <div
+          class="c-step-title"
+          ref="title"
+          :class="[currentStatus]">
+        <slot name="title">{{ title }}</slot>
+      </div>
+      <div v-if="isSimple" class="c-step-arrow"></div>
+      <div
+          v-else
+          class="c-step-description"
+          :class="[currentStatus]">
+        <slot name="description">{{ description }}</slot>
+      </div>
     </div>
   </div>
 </template>
-<script>
-import Emitter from 'canknow-ui-core/src/mixins/emitter';
-import { oneOf } from 'canknow-ui-core/src/utils/assist';
 
+<script>
 export default {
   name: 'CStep',
-  mixins: [ Emitter ],
   props: {
-    status: {
-      validator (value) {
-        return oneOf(value, ['wait', 'process', 'finish', 'error']);
-      }
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    content: {
-      type: String
-    },
-    icon: {
-      type: String
-    }
+    title: String,
+    icon: String,
+    description: String,
+    status: String
   },
-  data () {
+  data() {
     return {
-      stepNumber: '',
-      nextError: false,
-      total: 1,
-      currentStatus: ''
+      index: -1,
+      lineStyle: {},
+      internalStatus: ''
     };
   },
-  computed: {
-    wrapClasses () {
-      return [
-        `${this.currentStatus}`,
-        {
-          ['c-step-custom']: !!this.icon,
-          ['c-step-next-error']: this.nextError
-        }
-      ];
-    },
-    iconName () {
-      let icon = '';
+  beforeCreate() {
+    this.$parent.steps.push(this);
+  },
 
-      if (this.icon) {
-        icon = this.icon;
+  beforeDestroy() {
+    const steps = this.$parent.steps;
+    const index = steps.indexOf(this);
+    if (index >= 0) {
+      steps.splice(index, 1);
+    }
+  },
+
+  computed: {
+    currentStatus() {
+      return this.status || this.internalStatus;
+    },
+    prevStatus() {
+      const prevStep = this.$parent.steps[this.index - 1];
+      return prevStep ? prevStep.currentStatus : 'wait';
+    },
+    isCenter() {
+      return this.$parent.alignCenter;
+    },
+    isVertical() {
+      return this.$parent.direction === 'vertical';
+    },
+    isSimple() {
+      return this.$parent.simple;
+    },
+    isLast() {
+      const parent = this.$parent;
+      return parent.steps[parent.steps.length - 1] === this;
+    },
+    stepsCount() {
+      return this.$parent.steps.length;
+    },
+    space() {
+      const { isSimple, $parent: { space } } = this;
+      return isSimple ? '' : space ;
+    },
+    style: function() {
+      const style = {};
+      const parent = this.$parent;
+      const len = parent.steps.length;
+
+      const space = (typeof this.space === 'number'
+        ? this.space + 'px'
+        : this.space
+          ? this.space
+          : 100 / (len - (this.isCenter ? 0 : 1)) + '%');
+      style.flexBasis = space;
+      if (this.isVertical) return style;
+      if (this.isLast) {
+        style.maxWidth = 100 / this.stepsCount + '%';
       }
       else {
-        if (this.currentStatus === 'finish') {
-          icon = 'success';
-        }
-        else if (this.currentStatus === 'error') {
-          icon = 'cry';
-        }
+        style.marginRight = -this.$parent.stepOffset + 'px';
       }
-      return icon;
-    },
-    styles () {
-      return {
-        width: `${1/this.total*100}%`
-      };
-    }
-  },
-  watch: {
-    status (value) {
-      this.currentStatus = value;
 
-      if (this.currentStatus === 'error') {
-        this.$parent.setNextError();
-      }
+      return style;
     }
   },
-  created () {
-    this.currentStatus = this.status;
+
+  methods: {
+    updateStatus(val) {
+      const prevChild = this.$parent.$children[this.index - 1];
+
+      if (val > this.index) {
+        this.internalStatus = this.$parent.finishStatus;
+      }
+      else if (val === this.index && this.prevStatus !== 'error') {
+        this.internalStatus = this.$parent.processStatus;
+      }
+      else {
+        this.internalStatus = 'wait';
+      }
+
+      if (prevChild) prevChild.calcProgress(this.internalStatus);
+    },
+
+    calcProgress(status) {
+      let step = 100;
+      const style = {};
+
+      style.transitionDelay = 150 * this.index + 'ms';
+
+      if (status === this.$parent.processStatus) {
+        step = this.currentStatus !== 'error' ? 0 : 0;
+      }
+      else if (status === 'wait') {
+        step = 0;
+        style.transitionDelay = (-150 * this.index) + 'ms';
+      }
+
+      style.borderWidth = step && !this.isSimple ? '1px' : 0;
+      this.$parent.direction === 'vertical'
+        ? style.height = step + '%'
+        : style.width = step + '%';
+
+      this.lineStyle = style;
+    }
   },
-  mounted () {
-    this.dispatch('Steps', 'append');
-  },
-  beforeDestroy () {
-    this.dispatch('Steps', 'remove');
+
+  mounted() {
+    const unwatch = this.$watch('index', val => {
+      this.$watch('$parent.active', this.updateStatus, { immediate: true });
+      this.$watch('$parent.processStatus', () => {
+        const activeIndex = this.$parent.active;
+        this.updateStatus(activeIndex);
+      }, { immediate: true });
+      unwatch();
+    });
   }
 };
 </script>

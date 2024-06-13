@@ -48,7 +48,7 @@
     "clean": "rimraf dist",
     "build:style": "gulp build --gulpfile build/bin/gulpfile.js",
     "build": "npm run clean && npm run build:entry && vue-cli-service build --target lib ./src/index.js",
-    "serve:example": "npm run load-icons && npm run initialize-icon && npm run build:entry && vue-cli-service serve ./examples/src/main.js",
+    "serve:example": "npm run initialize-icon && npm run build:entry && vue-cli-service serve ./examples/src/main.js",
     "build:example": "npm run load-icons && npm run initialize-icon && npm run build:entry && vue-cli-service build --dest ./examples/dist ./examples/src/main.js",
     "report": "npm run build -- --report",
     "lint": "vue-cli-service lint src",
