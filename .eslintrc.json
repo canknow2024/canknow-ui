@@ -28,7 +28,7 @@
         "module": true,
         "exports": true
     },
-    "rules": {
+    "rules": {z
         "indent": ["error", 2, { "SwitchCase": 1 }],
         "comma-spacing": ["error", { "before": false, "after": true }],
         "object-curly-spacing": ["error", "always"],

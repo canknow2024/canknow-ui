@@ -3,7 +3,7 @@
       @dragstart.prevent
       :class="[
       'c-input-number',
-      inputNumberSize ? inputNumberSize : '',
+      inputNumberSize? inputNumberSize : '',
       { 'disabled': inputNumberDisabled },
     ]">
     <div
@@ -79,7 +79,7 @@ export default {
   },
   data() {
     return {
-      currentValue: 0,
+      currentValue: null,  // 将初始值改为 null
       userInput: null
     };
   },
@@ -87,27 +87,28 @@ export default {
     value: {
       immediate: true,
       handler(value) {
-        let newVal = value === undefined ? value : Number(value);
-        if (newVal !== undefined) {
-          if (isNaN(newVal)) {
+        let newValue = value === undefined || value === null? null : Number(value);  // 处理为 null 情况
+
+        if (newValue!== null) {  // 这里修改为不为 null 的判断
+          if (isNaN(newValue)) {
             return;
           }
 
           if (this.stepStrictly) {
             const stepPrecision = this.getPrecision(this.step);
             const precisionFactor = Math.pow(10, stepPrecision);
-            newVal = Math.round(newVal / this.step) * precisionFactor * this.step / precisionFactor;
+            newValue = Math.round(newValue / this.step) * precisionFactor * this.step / precisionFactor;
           }
 
-          if (this.precision !== undefined) {
-            newVal = this.toPrecision(newVal, this.precision);
+          if (this.precision!== undefined) {
+            newValue = this.toPrecision(newValue, this.precision);
           }
         }
-        if (newVal >= this.max) newVal = this.max;
-        if (newVal <= this.min) newVal = this.min;
-        this.currentValue = newVal;
+        if (newValue >= this.max) newValue = this.max;
+        if (newValue <= this.min) newValue = this.min;
+        this.currentValue = newValue;
         this.userInput = null;
-        this.$emit('input', newVal);
+        this.$emit('input', newValue);
       }
     }
   },
@@ -122,7 +123,7 @@ export default {
       const { value, step, getPrecision, precision } = this;
       const stepPrecision = getPrecision(step);
 
-      if (precision !== undefined) {
+      if (precision!== undefined) {
         if (stepPrecision > precision) {
           console.warn('[Canknow Warn][InputNumber]precision should not be less than the decimal places of step');
         }
@@ -136,10 +137,10 @@ export default {
       return this.size || this._formItemSize;
     },
     inputNumberDisabled() {
-      return this.disabled || !!(this.form || {}).disabled;
+      return this.disabled ||!!(this.form || {}).disabled;
     },
     displayValue() {
-      if (this.userInput !== null) {
+      if (this.userInput!== null) {
         return this.userInput;
       }
 
@@ -152,12 +153,12 @@ export default {
           currentValue = Math.round(currentValue / this.step) * precisionFactor * this.step / precisionFactor;
         }
 
-        if (this.precision !== undefined) {
+        if (this.precision!== undefined) {
           currentValue = currentValue.toFixed(this.precision);
         }
       }
 
-      return currentValue;
+      return currentValue === null? '' : currentValue;  // 当为 null 时返回空字符串
     }
   },
   methods: {
@@ -166,24 +167,24 @@ export default {
       return parseFloat(Math.round(num * Math.pow(10, precision)) / Math.pow(10, precision));
     },
     getPrecision(value) {
-      if (value === undefined) return 0;
+      if (value === undefined || value === null) return 0;  // 处理为 null 情况
       const valueString = value.toString();
       const dotPosition = valueString.indexOf('.');
       let precision = 0;
-      if (dotPosition !== -1) {
+      if (dotPosition!== -1) {
         precision = valueString.length - dotPosition - 1;
       }
       return precision;
     },
     _increase(val, step) {
-      if (typeof val !== 'number' && val !== undefined) return this.currentValue;
+      if (typeof val!== 'number' && val!== undefined && val!== null) return this.currentValue;  // 处理为 null 情况
 
       const precisionFactor = Math.pow(10, this.numPrecision);
       // Solve the accuracy problem of JS decimal calculation by converting the value to integer.
       return this.toPrecision((precisionFactor * val + precisionFactor * step) / precisionFactor);
     },
     _decrease(val, step) {
-      if (typeof val !== 'number' && val !== undefined) return this.currentValue;
+      if (typeof val!== 'number' && val!== undefined && val!== null) return this.currentValue;  // 处理为 null 情况
 
       const precisionFactor = Math.pow(10, this.numPrecision);
 
@@ -210,7 +211,7 @@ export default {
     setCurrentValue(newVal) {
       const oldVal = this.currentValue;
 
-      if (typeof newVal === 'number' && this.precision !== undefined) {
+      if (typeof newVal === 'number' && this.precision!== undefined) {
         newVal = this.toPrecision(newVal, this.precision);
       }
       if (newVal >= this.max) newVal = this.max;
@@ -225,7 +226,7 @@ export default {
       this.userInput = value;
     },
     handleInputChange(value) {
-      const newVal = value === '' ? undefined : Number(value);
+      const newVal = value === ''? null : Number(value);  // 处理为空字符串时为 null
       if (!isNaN(newVal) || value === '') {
         this.setCurrentValue(newVal);
       }
@@ -237,16 +238,17 @@ export default {
   },
   mounted() {
     let innerInput = this.$refs.input.$refs.input;
-    innerInput.setAttribute('role', 'spinbutton');
+    innerInput.setAttribute('role','spinbutton');
     innerInput.setAttribute('aria-valuemax', this.max);
     innerInput.setAttribute('aria-valuemin', this.min);
-    innerInput.setAttribute('aria-valuenow', this.currentValue);
+    innerInput.setAttribute('aria-valuenow', this.currentValue === null? '' : this.currentValue);  // 处理为 null 情况
     innerInput.setAttribute('aria-disabled', this.inputNumberDisabled);
   },
   updated() {
-    if (!this.$refs || !this.$refs.input) return;
+    if (!this.$refs ||!this.$refs.input) return;
     const innerInput = this.$refs.input.$refs.input;
-    innerInput.setAttribute('aria-valuenow', this.currentValue);
+    innerInput.setAttribute('aria-valuenow', this.currentValue === null? '' : this.currentValue);  // 处理为 null 情况
   }
 };
 </script>
+
