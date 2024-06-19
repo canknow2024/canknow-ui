@@ -10,16 +10,18 @@
 ```javascript
 import Vue from 'vue';
 import canknow from 'canknow-ui';
-@import "~canknow-ui/dist/canknow-ui.css";
-
 Vue.use(canknow);
 ```
 
+```scss
+@import "~canknow-ui/dist/canknow-ui.css";
+```
+
 # Example
-https://canknow.github.io/canknow-ui
+https://canknow2024.github.io/canknow-ui
 
 ## Browser Support
-Modern browsers and Internet Explorer 10+.
+Modern browsers and Internet Explorer 11+.
 
 # License
 [MIT](LICENSE)
